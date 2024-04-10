@@ -1,32 +1,125 @@
-import { useState } from "react"
+"use client"
 
-export default function Form(){
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form"
+import { Input } from "./ui/input"
+import { Button } from "./ui/button"
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group"
+import { IComprovante } from "@/interface/IComprovante"
+import { v4 as uuidv4 } from 'uuid';
 
-    const [isSaida, setIsSaida] = useState(false);
+const formSchema = z.object({
+  description: z.string().min(2, {
+    message: "Description must be at least 2 characters.",
+  }),
+  value: z.string(),
+  type: z.enum(["entrada", "saida"], {
+    required_error: "You need to select a notification type.",
+  }),
+})
 
-    return(
-        <section className="flex justify-around border-2 items-center p-5">
-            <div className="flex flex-col items-start">
-                <label htmlFor="description">Descrição</label>
-                <input type="text" id="description" className="bg-gray-100 border-2 border-gray-500 rounded p-1" />
-            </div>
-            <div className="flex flex-col items-start">
-                <label htmlFor="saidas">Valor</label>
-                <input type="number" id="saidas" className="bg-gray-100 border-2 border-gray-500 rounded p-1" />
-            </div>
-            <div className="flex flex-row w-[15%] justify-between">
-                <div className="gap-2">
-                    <label htmlFor="">Entrada</label>
-                    <input checked={isSaida == false} onChange={()=> setIsSaida(!isSaida)} defaultChecked type="radio" className="ml-2"/>
-                </div>
-                <div className="justify-between">
-                    <label htmlFor="">Saída</label>
-                    <input checked={isSaida} onChange={()=> setIsSaida(!isSaida)} type="radio" className="ml-2"/>
-                </div>
-            </div>
-            <div>
-                <button className="p-3 bg-green-500 border-green-600 border-2 rounded">Adicionar</button>
-            </div>
-        </section>
-    )
+export function Formulario({ setComprovantes, comprovantes }: any) {
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema)
+  })
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+
+    const formattedValues = {
+      id: uuidv4(),
+      description: values.description,
+      type: values.type,
+      value: Number(values.value)
+    }
+
+    setComprovantes((prev : any) => [
+      ...prev,
+      formattedValues
+    ])
+    console.log(values)
+    console.log(comprovantes)
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-x-8 py-5 px-5 flex items-center justify-between w-[100%] rounded border-2 border-zinc-400">
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel className="text-left">Description</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage className="text-left" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="value"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel className="text-left">Value</FormLabel>
+              <FormControl>
+                <Input pattern="^[0-9\.]*$" type="string" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage className="text-left" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="type"
+          render={({ field }) => (
+            <FormItem className="space-y-3 flex flex-col">
+              <FormLabel className="text-left">Type </FormLabel>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="flex flex-col space-y-1"
+                >
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="entrada" />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      Entrada
+                    </FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="saida" />
+                    </FormControl>
+                    <FormLabel className="font-normal">Saída</FormLabel>
+                  </FormItem>
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Submit</Button>
+      </form>
+    </Form>
+  )
 }
