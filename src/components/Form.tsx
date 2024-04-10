@@ -1,4 +1,3 @@
-"use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -15,7 +14,6 @@ import {
 import { Input } from "./ui/input"
 import { Button } from "./ui/button"
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group"
-import { IComprovante } from "@/interface/IComprovante"
 import { v4 as uuidv4 } from 'uuid';
 
 const formSchema = z.object({
@@ -28,7 +26,7 @@ const formSchema = z.object({
   }),
 })
 
-export function Formulario({ setComprovantes, comprovantes }: any) {
+export function Formulario({ setComprovantes }: any) {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema)
@@ -47,8 +45,6 @@ export function Formulario({ setComprovantes, comprovantes }: any) {
       ...prev,
       formattedValues
     ])
-    console.log(values)
-    console.log(comprovantes)
   }
 
   return (

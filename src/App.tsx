@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import {Formulario} from './components/Form'
 import List from './components/List'
@@ -32,7 +30,6 @@ function App() {
   useEffect(()=> {
     let total = 0;
     comprovantes.forEach((comprovante : IComprovante)=> {
-      console.log(comprovante)
       if(comprovante.type == "entrada"){
         total = total + comprovante.value
       }else{

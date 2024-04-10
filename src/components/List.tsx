@@ -1,7 +1,7 @@
-import { CircleDollarSign, CircleDollarSignIcon, HandCoinsIcon, TrashIcon } from "lucide-react"
+import { CircleDollarSignIcon, HandCoinsIcon, TrashIcon } from "lucide-react"
 import { IComprovante } from "../interface/IComprovante"
-import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "./ui/table"
-import { Dialog, DialogTrigger } from "./ui/dialog"
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
+
 
 
 type ListProps = {
